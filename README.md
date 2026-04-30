@@ -1,3 +1,5 @@
+<!-- markdownlint-disable MD001 MD025 MD031 MD032 -->
+
 # Ghost Backend Framework
 
 A comprehensive, reusable backend development foundation designed to be used across all your development projects. This framework provides common patterns, utilities, and configurations that eliminate repetitive setup work and ensure consistency across your applications.
@@ -13,6 +15,14 @@ A comprehensive, reusable backend development foundation designed to be used acr
 - **Database Layer**: SQLAlchemy 2.0 with async support for PostgreSQL, SQLite, Redis, and MongoDB
 - **Authentication**: JWT-based auth with bcrypt hashing and role-based access control (RBAC)
 - **API Framework**: FastAPI integration with middleware, rate limiting, and standardized responses
+
+### Auth Scope Note (Level 2)
+- This framework does **not** implement Clerk session/UI authentication directly.
+- Clerk is a Level 3 application concern (for example Ghost-Platform Portal).
+- Level 2 services may consume validated identity claims passed from Level 3 gateways or tokens handled by project-specific auth services.
+- Vercel documentation authority for deployment/API guidance is maintained at Level 1 in `~/Business/docs/cicd/CICD_GUIDE.md` and `~/Business/docs/integrations/INTEGRATION_OWNERSHIP.md`.
+- Cloudflare DNS/Worker/failover authority is maintained at Level 1 in `~/Business/docs/cloudflare/CLOUDFLARE_FAILOVER.md` and `~/Business/docs/integrations/INTEGRATION_OWNERSHIP.md`.
+- GitHub CI/API/workflow documentation authority is maintained at Level 1 in `~/Business/docs/cicd/CICD_GUIDE.md` and `~/Business/docs/cursor/CURSOR_GITHUB_MCP.md`.
 
 ## 📦 Quick Start
 
@@ -169,9 +179,10 @@ All project documentation is now located in the `docs/` folder for better organi
 - Security Setup: [docs/SECURITY_SETUP.md](docs/SECURITY_SETUP.md)
 - API Management: [docs/API_MANAGEMENT.md](docs/API_MANAGEMENT.md)
 - Contributing Guide: [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md)
-- Proxy Configuration: [docs/PROXYMAN_FIX.md](docs/PROXYMAN_FIX.md)
+- Proxy Configuration: [~/Business/docs/proxyman/PROXYMAN_GUIDE.md](~/Business/docs/proxyman/PROXYMAN_GUIDE.md)
 - Security Remediation Report: [docs/SECURITY_REMEDIATION_REPORT.md](docs/SECURITY_REMEDIATION_REPORT.md)
 - Organization Complete: [docs/ORGANIZATION_COMPLETE.md](docs/ORGANIZATION_COMPLETE.md)
+- PagerDuty Integration Guidance: [docs/PAGERDUTY_INTEGRATION.md](docs/PAGERDUTY_INTEGRATION.md)
 ```env
 # Database
 DATABASE_URL=postgresql://user:pass@localhost/dbname

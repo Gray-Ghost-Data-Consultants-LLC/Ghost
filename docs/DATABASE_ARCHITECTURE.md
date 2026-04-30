@@ -119,6 +119,96 @@ Migrations run automatically on container startup unless `SKIP_MIGRATIONS=true`.
 - **Redis Exporter**: `127.0.0.1:9188` → Prometheus scrape
 - **Grafana Dashboard**: `localhost:3201` (Level 2)
 
+## Cloud SQL Migration Strategy
+
+### Local → Cloud SQL Promotion
+
+Alembic migrations are the source of truth for schema changes. To apply pending migrations to Cloud SQL:
+
+```bash
+# 1. Start Cloud SQL Proxy (from the-system/ or ghost-backend/)
+docker compose --profile gcp up -d cloud-sql-proxy
+# Proxy listens on localhost:5453
+
+# 2. Set DATABASE_URL to point at Cloud SQL via proxy
+export DATABASE_URL="postgresql://postgres:<password>@localhost:5453/ghost"
+
+# 3. Check current migration state
+alembic current
+
+# 4. Apply all pending migrations
+alembic upgrade head
+
+# 5. Verify
+alembic current
+```
+
+### Schema Drift Detection
+
+Before promoting local migrations to Cloud SQL, verify no manual schema drift:
+
+```bash
+# Dump Cloud SQL schema
+pg_dump --schema-only -h localhost -p 5453 -U postgres ghost > /tmp/cloud-schema.sql
+
+# Compare with local
+pg_dump --schema-only -h localhost -p 5433 -U postgres ghost > /tmp/local-schema.sql
+diff /tmp/local-schema.sql /tmp/cloud-schema.sql
+```
+
+### Rollback Procedure
+
+```bash
+# Identify current version
+alembic current
+
+# Downgrade one revision
+alembic downgrade -1
+
+# Downgrade to specific revision
+alembic downgrade <revision_id>
+```
+
+## Disaster Recovery
+
+### Backup Strategy
+
+| Method | Frequency | Retention | Recovery Time |
+|--------|-----------|-----------|---------------|
+| Cloud SQL automated backup | Daily | 7 days (configurable) | ~minutes |
+| Point-in-Time Recovery (PITR) | Continuous (WAL) | 7 days | ~minutes |
+| Manual pg_dump | Before major migrations | Until superseded | ~minutes (small DB) |
+
+### Cloud SQL Automated Backups
+
+Cloud SQL provides automated daily backups and continuous WAL archiving for PITR. Enable via:
+
+```bash
+gcloud sql instances patch ghost-backend-db \
+  --backup-start-time=04:00 \
+  --enable-point-in-time-recovery \
+  --retained-backups-count=7
+```
+
+### Pre-Migration Manual Backup
+
+```bash
+# Before any major migration, take a manual snapshot
+pg_dump -h localhost -p 5453 -U postgres -Fc ghost > ghost-backend-$(date +%Y%m%d).dump
+
+# Restore if needed
+pg_restore -h localhost -p 5453 -U postgres -d ghost --clean ghost-backend-YYYYMMDD.dump
+```
+
+### Recovery Scenarios
+
+| Scenario | Action |
+|----------|--------|
+| Bad migration applied | `alembic downgrade -1` or restore from pre-migration dump |
+| Data corruption | PITR to timestamp before corruption |
+| Instance failure | Cloud SQL automatic failover (if HA enabled) |
+| Full disaster | Restore from automated backup to new instance |
+
 ## Client Project Databases
 
 Client projects use Supabase — they do NOT share Ghost Backend's PostgreSQL:

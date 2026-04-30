@@ -14,7 +14,7 @@
 | Redis port | `127.0.0.1:6380` (loopback only) |
 | Container prefix | `ghost-be-*` |
 | Networks | `ghost-backend-net` (internal) + `ggdc-shared-net` (Level 2) |
-| GitHub remote | `git@github.com:GrayGhostDev/Ghost.git` |
+| GitHub remote | `git@github.com:GrayGhostDen/Ghost.git` (remains at `GrayGhostDen` org for now; transfer to `Gray-Ghost-Data-Consultants-LLC` deferred) |
 
 ### Docker Compose (from this directory)
 ```bash
@@ -61,6 +61,16 @@ The overlay only fills empty/default fields — env vars always take precedence.
 - Traefik routes `api.ghost.local` → port 8801
 - Loki collects logs via Promtail (label: `com.ggdc.project=GGDC-System`)
 - Connects to Ghost-Platform (`the-system`) in Phase 5 via `ggdc-shared-net`
+
+### Authentication Scope
+- Ghost Backend is a Level 2 shared framework and does **not** implement Clerk session/UI flows directly.
+- Clerk-specific authentication guidance belongs to Level 3 application docs (for example `the-system/docs/deployment/CLERK_ENVIRONMENT.md`).
+
+### Proxyman MCP Boundary
+- Proxyman MCP is global-only (`~/.cursor/mcp.json`, `~/.mcp.json`) and should not be duplicated in this repo-local `.cursor/mcp.json`.
+- Any proxy/certificate handling here is local development support only.
+- Do not treat Proxyman availability as a staging/production runtime dependency.
+- Canonical governance: `~/Business/docs/proxyman/PROXYMAN_GUIDE.md` and `~/Business/docs/integrations/MCP_TOPOLOGY.md`.
 
 ### TablePlus GUI Access
 - **Ghost Backend DB** → TablePlus group "Ghost Backend (L2)" (orange) — `127.0.0.1:5433`, user `postgres`, db `ghost`

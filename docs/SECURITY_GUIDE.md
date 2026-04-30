@@ -2,6 +2,16 @@
 # SECURITY CONFIGURATION GUIDE - Ghost Backend Framework
 # ============================================================================
 
+## PCI DSS Shared-Control Context (Level 2)
+
+This guide is security-focused and framework-oriented. For PCI DSS v4.0.1 cross-level governance, use:
+
+- `~/Business/docs/compliance/pci-dss/PCI_DSS_LEVEL1_GOVERNANCE_BASELINE.md`
+- `~/Business/docs/compliance/pci-dss/PCI_DSS_CONTROL_CROSSWALK_LEVEL1_TO_L3.md`
+- `~/Business/GGDC-System/docs/PCI_DSS_L2_SHARED_CONTROLS.md`
+
+Any Level 3 project referencing Ghost Backend in a payment context must document project-specific scope and evidence in its own PCI profile.
+
 ## 🔑 JWT Token Configuration
 
 ### 1. Generate a Secure JWT Secret Key
