@@ -1,0 +1,25 @@
+# Secrets and credentials
+.env
+.env.*
+*.pem
+*.key
+
+# Data volumes
+data/
+storage/
+
+# Python artifacts
+__pycache__/
+*.pyc
+htmlcov/
+.coverage
+.pytest_cache/
+.mypy_cache/
+
+# Build artifacts
+dist/
+*.egg-info/
+
+# OS files
+.DS_Store
+.git/

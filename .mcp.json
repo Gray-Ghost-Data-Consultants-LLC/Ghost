@@ -15,7 +15,24 @@
         "-y", "@modelcontextprotocol/server-filesystem",
         "/Users/grayghostdata/Business/GGDC-System/ghost-backend"
       ],
-      "description": "File system — scoped to ghost-backend only (fetch inherited from GGDC-System parent)"
+      "description": "File system — scoped to ghost-backend only"
+    },
+    "fetch": {
+      "command": "uvx",
+      "args": ["mcp-server-fetch"],
+      "description": "HTTP operations — health checks, API calls"
+    },
+    "github": {
+      "command": "podman",
+      "args": [
+        "run", "-i", "--rm",
+        "-e", "GITHUB_PERSONAL_ACCESS_TOKEN",
+        "ghcr.io/github/github-mcp-server"
+      ],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_TOKEN}"
+      },
+      "description": "GitHub MCP — PRs, issues, code review"
     }
   }
 }
