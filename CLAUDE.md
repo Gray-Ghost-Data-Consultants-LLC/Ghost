@@ -14,7 +14,7 @@
 | Redis port | `127.0.0.1:6380` (loopback only) |
 | Container prefix | `ghost-be-*` |
 | Networks | `ghost-backend-net` (internal) + `ggdc-shared-net` (Level 2) |
-| GitHub remote | `git@github.com:GrayGhostDen/Ghost.git` (remains at `GrayGhostDen` org for now; transfer to `Gray-Ghost-Data-Consultants-LLC` deferred) |
+| GitHub remote | `git@github.com:Gray-Ghost-Data-Consultants-LLC/Ghost.git` (renamed from `ghost-backend` 2026-04-30) |
 
 ### Docker Compose (from this directory)
 ```bash
