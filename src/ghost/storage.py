@@ -578,7 +578,7 @@ class S3StorageProvider(LoggerMixin):
             self.logger.info(f"File deleted from S3: s3://{self.bucket}/{key}")
             return True
         except Exception as e:
-            self.logger.error(f"Failed to delete from S3: {e}")
+            self.logger.error(f"Failed to delete from S3: {e}")  # nosec B608 - log message, not SQL
             return False
 
     def get(self, key: str) -> Optional[bytes]:

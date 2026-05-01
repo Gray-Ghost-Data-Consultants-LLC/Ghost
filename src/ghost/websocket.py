@@ -8,6 +8,7 @@ Adds real-time communication capabilities to the backend.
 from typing import Dict, List, Any, Optional
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Query
 from fastapi.websockets import WebSocketState
+from loguru import logger
 import json
 import asyncio
 import uuid
@@ -168,8 +169,8 @@ def add_websocket_routes(app: FastAPI):
                 token_data = auth.verify_token(token)
                 if token_data:
                     user_id = token_data.user_id
-        except Exception:
-            pass  # Auth module may not be fully configured
+        except Exception as e:
+            logger.debug(f"WebSocket auth verification skipped: {e}")
 
         if not token or not user_id:
             await websocket.close(code=4001, reason="Authentication required")

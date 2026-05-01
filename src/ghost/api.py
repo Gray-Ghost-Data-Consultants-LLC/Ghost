@@ -394,7 +394,7 @@ class APIManager(LoggerMixin):
                 )
 
             return APIResponse.success(
-                data={"access_token": new_access, "token_type": "bearer"},
+                data={"access_token": new_access, "token_type": "bearer"},  # nosec B105 - OAuth2 token type literal, not a credential
                 message="Token refreshed",
             )
 
@@ -466,7 +466,7 @@ class APIManager(LoggerMixin):
                         data={
                             "access_token": access_token,
                             "refresh_token": refresh_token,
-                            "token_type": "bearer",
+                            "token_type": "bearer",  # nosec B105 - OAuth2 token type literal, not a credential
                             "user": {
                                 "id": str(user.id),
                                 "username": user.username,
