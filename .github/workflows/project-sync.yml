@@ -1,0 +1,30 @@
+name: Sync to Organization Project Board
+
+on:
+  issues:
+    types: [opened, labeled, assigned, closed, reopened]
+  pull_request:
+    types: [opened, labeled, ready_for_review, review_requested, closed, reopened]
+  workflow_dispatch:
+
+# One sync per issue/PR at a time: the auto-labeller fires `labeled` once per
+# label, which queued five identical runs per PR and flooded the hosted queue.
+concurrency:
+  group: project-sync-${{ github.event.pull_request.number || github.event.issue.number || github.run_id }}
+  cancel-in-progress: true
+
+permissions:
+  issues: write
+  pull-requests: write
+  contents: read
+  repository-projects: write
+
+jobs:
+  sync-project-board:
+    uses: Gray-Ghost-Data-Consultants-LLC/.github/.github/workflows/reusable-project-board.yml@main
+    with:
+      org-name: "Gray-Ghost-Data-Consultants-LLC"
+      project-number: 1
+      auto-label: true
+    secrets:
+      PROJECT_TOKEN: ${{ secrets.ORG_PROJECT_TOKEN || secrets.GITHUB_TOKEN }}
