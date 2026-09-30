@@ -60,7 +60,7 @@ sentry-sdk[fastapi]==2.50.0
 
 # Security
 cryptography>=44.0.1
-pyjwt==2.12.1
+pyjwt==2.15.0
 bcrypt==4.3.0
 
 # Observability — Prometheus metrics + OpenTelemetry tracing
