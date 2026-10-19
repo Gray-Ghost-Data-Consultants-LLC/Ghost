@@ -55,7 +55,7 @@ toml==0.10.2
 configparser==7.1.0
 
 # Logging and monitoring
-loguru==0.7.2
+loguru==0.7.3
 sentry-sdk[fastapi]==2.50.0
 
 # Security
