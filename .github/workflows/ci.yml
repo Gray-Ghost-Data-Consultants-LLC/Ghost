@@ -19,7 +19,7 @@ jobs:
         env:
           POSTGRES_DB: ghost
           POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: ghost_password
+          POSTGRES_PASSWORD: ghost_password  # pragma: allowlist secret
         ports:
           - 5432:5432
         options: >-
@@ -77,7 +77,7 @@ jobs:
         DB_PORT: "5432"
         DB_NAME: ghost
         DB_USER: postgres
-        DB_PASSWORD: ghost_password
+        DB_PASSWORD: ghost_password  # pragma: allowlist secret
         REDIS_HOST: localhost
         REDIS_PORT: "6379"
         ENVIRONMENT: testing
@@ -106,6 +106,12 @@ jobs:
       run: docker build -f Dockerfile.prod -t ghost-backend:test-prod .
 
     - name: Verify container starts with real app
+      env:
+        # CI-only placeholders: tools/docker_entrypoint.py requires these outside
+        # development (fail-closed since 4a12281). They sign nothing real.
+        JWT_SECRET: ci-only-jwt-secret-not-for-production  # pragma: allowlist secret
+        API_KEY: ci-only-api-key-not-for-production  # pragma: allowlist secret
+        CI_DB_PASSWORD: ghost_password  # pragma: allowlist secret
       run: |
         # Start postgres and redis for the container to connect to
         docker network create ghost-ci-net
@@ -113,7 +119,7 @@ jobs:
         docker run -d --name ci-postgres --network ghost-ci-net \
           -e POSTGRES_DB=ghost \
           -e POSTGRES_USER=postgres \
-          -e POSTGRES_PASSWORD=ghost_password \
+          -e POSTGRES_PASSWORD="$CI_DB_PASSWORD" \
           postgres:16-alpine
 
         docker run -d --name ci-redis --network ghost-ci-net \
@@ -130,7 +136,9 @@ jobs:
           -e DB_PORT=5432 \
           -e DB_NAME=ghost \
           -e DB_USER=postgres \
-          -e DB_PASSWORD=ghost_password \
+          -e DB_PASSWORD="$CI_DB_PASSWORD" \
+          -e JWT_SECRET \
+          -e API_KEY \
           -e REDIS_HOST=ci-redis \
           -e REDIS_PORT=6379 \
           -e MAX_DB_RETRIES=3 \
