@@ -23,6 +23,10 @@ services:
       - DB_NAME=ghost
       - DB_USER=postgres
       - DB_PASSWORD=ghost_password
+      # CI-only placeholders. tools/docker_entrypoint.py requires these outside
+      # development (fail-closed since 4a12281); they sign nothing real.
+      - JWT_SECRET=ci-only-jwt-secret-not-for-production
+      - API_KEY=ci-only-api-key-not-for-production
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - REDIS_PASSWORD=changeme
