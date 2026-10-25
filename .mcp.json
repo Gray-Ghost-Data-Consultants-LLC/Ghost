@@ -13,7 +13,7 @@
       "command": "npx",
       "args": [
         "-y", "@modelcontextprotocol/server-filesystem",
-        "/Users/grayghostdata/Business/GGDC-System/ghost-backend"
+        "${HOME}/Business/GGDC-System/ghost-backend"
       ],
       "description": "File system — scoped to ghost-backend only"
     },
@@ -23,7 +23,7 @@
       "description": "HTTP operations — health checks, API calls"
     },
     "github": {
-      "command": "podman",
+      "command": "/opt/homebrew/bin/docker",
       "args": [
         "run", "-i", "--rm",
         "-e", "GITHUB_PERSONAL_ACCESS_TOKEN",
